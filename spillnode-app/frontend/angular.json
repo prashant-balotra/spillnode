@@ -23,7 +23,8 @@
               "src/styles.css",
               "node_modules/quill/dist/quill.snow.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": ["quill-delta", "lodash-es", "eventemitter3"]
           },
           "configurations": {
             "production": {
