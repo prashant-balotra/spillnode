@@ -9,40 +9,43 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   template: `
-    <section class="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-grain">
-      <div class="w-full max-w-md card p-8 fade-up">
-        <h1 class="font-display text-3xl font-extrabold tracking-tight">Welcome back</h1>
-        <p class="text-sm text-ink-400 mt-1">Sign in to continue learning.</p>
+    <section class="min-h-[80vh] flex items-center justify-center px-6 py-16 relative">
+      <div class="absolute inset-0 gradient-amber-soft pointer-events-none"></div>
+      <div class="absolute inset-0 grain-overlay pointer-events-none"></div>
 
-        <form (ngSubmit)="onSubmit()" class="mt-8 space-y-4">
+      <div class="relative w-full max-w-md border border-border bg-card p-8 animate-fade-up">
+        <div class="code-label mb-3">// auth.signIn()</div>
+        <h1 class="font-heading text-3xl font-black tracking-tight">Welcome back</h1>
+        <p class="text-sm text-muted-foreground mt-2">Sign in to continue your learning track.</p>
+
+        <form (ngSubmit)="onSubmit()" class="mt-8 space-y-5">
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-ink-700 mb-1">Email</label>
+            <label class="block font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-2">email</label>
             <input type="email" [(ngModel)]="email" name="email" required
               data-testid="login-email"
-              class="w-full px-4 py-3 rounded-xl border border-ink-200 focus:border-accent focus:outline-none text-sm" />
+              class="w-full px-3 py-3 bg-background border border-border focus:border-primary focus:outline-none text-sm font-mono" />
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-ink-700 mb-1">Password</label>
+            <label class="block font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-2">password</label>
             <input type="password" [(ngModel)]="password" name="password" required
               data-testid="login-password"
-              class="w-full px-4 py-3 rounded-xl border border-ink-200 focus:border-accent focus:outline-none text-sm" />
+              class="w-full px-3 py-3 bg-background border border-border focus:border-primary focus:outline-none text-sm font-mono" />
           </div>
           @if (error) {
-            <p class="text-sm text-red-600" data-testid="login-error">{{ error }}</p>
+            <p class="font-mono text-xs text-red-500" data-testid="login-error">// error: {{ error }}</p>
           }
           <button type="submit" [disabled]="loading"
-            class="btn-pill btn-primary w-full justify-center disabled:opacity-60"
-            data-testid="login-submit">
-            {{ loading ? 'Signing in...' : 'Sign in' }}
+            class="btn btn-primary w-full justify-center disabled:opacity-60" data-testid="login-submit">
+            {{ loading ? 'authenticating...' : 'sign.in()' }}
           </button>
         </form>
 
-        <p class="text-sm text-ink-400 mt-6 text-center">
-          No account? <a routerLink="/signup" class="text-accent-700 font-semibold hover:underline">Create one →</a>
+        <p class="text-sm text-muted-foreground mt-6 text-center">
+          New here? <a routerLink="/signup" class="text-primary font-semibold hover:underline">create.account() →</a>
         </p>
 
-        <div class="mt-6 p-3 rounded-xl bg-ink-50 text-xs text-ink-700">
-          <strong class="block mb-1">Default admin (seeded):</strong>
+        <div class="mt-6 p-3 border border-border font-mono text-xs text-muted-foreground">
+          <span class="text-primary">// seeded admin:</span><br>
           admin&#64;spillnode.com / Admin&#64;123
         </div>
       </div>
@@ -62,10 +65,7 @@ export class LoginComponent {
     this.loading = true;
     this.auth.login(this.email, this.password).subscribe({
       next: () => this.router.navigateByUrl('/'),
-      error: (e) => {
-        this.loading = false;
-        this.error = e.error?.error ?? 'Login failed';
-      },
+      error: (e) => { this.loading = false; this.error = e.error?.error ?? 'Login failed'; },
       complete: () => this.loading = false
     });
   }

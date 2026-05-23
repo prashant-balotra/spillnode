@@ -12,34 +12,40 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule, PostCardComponent],
   template: `
-    <section class="bg-grain border-b border-ink-100">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+    <section class="border-b border-border relative overflow-hidden">
+      <div class="absolute inset-0 gradient-amber-soft pointer-events-none"></div>
+      <div class="absolute inset-0 grain-overlay pointer-events-none"></div>
+
+      <div class="relative max-w-7xl mx-auto px-6 sm:px-8 py-16">
         @if (category) {
-          <span class="text-xs font-bold uppercase tracking-widest text-ink-400">Category</span>
-          <h1 class="font-display text-4xl sm:text-5xl font-extrabold mt-2"
+          <div class="code-label mb-3">// category.{{ category.slug }}</div>
+          <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-black tracking-tightest"
               [style.color]="category.colorHex">
             {{ category.name }}
           </h1>
           @if (category.description) {
-            <p class="mt-3 text-ink-700 max-w-2xl">{{ category.description }}</p>
+            <p class="mt-3 text-muted-foreground max-w-2xl">{{ category.description }}</p>
           }
         }
 
-        <form (ngSubmit)="search()" class="mt-6 flex gap-2 max-w-md">
-          <input type="text" [(ngModel)]="q" name="q" placeholder="Search in this category"
+        <form (ngSubmit)="search()" class="mt-8 flex max-w-md border border-border focus-within:border-primary transition-colors">
+          <span class="px-3 flex items-center font-mono text-xs text-muted-foreground select-none">{{ '\\$' }}</span>
+          <input type="text" [(ngModel)]="q" name="q"
+            placeholder="filter('keyword')"
             data-testid="cat-search-input"
-            class="flex-1 px-4 py-2 rounded-full bg-white border border-ink-200 text-sm focus:outline-none focus:border-accent" />
-          <button class="btn-pill btn-primary text-sm" data-testid="cat-search-submit">Search</button>
+            class="flex-1 px-2 py-2.5 bg-transparent font-mono text-sm focus:outline-none" />
+          <button class="px-4 bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider"
+                  data-testid="cat-search-submit">run</button>
         </form>
       </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <section class="max-w-7xl mx-auto px-6 sm:px-8 py-16">
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         @for (p of posts; track p.id) {
           <app-post-card [post]="p"></app-post-card>
         } @empty {
-          <p class="text-ink-400 col-span-3">No posts in this category yet.</p>
+          <p class="text-muted-foreground col-span-3 font-mono text-sm">// no posts in this category yet</p>
         }
       </div>
     </section>

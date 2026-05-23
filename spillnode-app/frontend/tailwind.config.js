@@ -1,32 +1,50 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{html,ts}"],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
-        display: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif']
+        heading: ['"Bricolage Grotesque"', '"Space Grotesk"', 'system-ui', 'sans-serif'],
+        sans:    ['"Inter"', 'system-ui', 'sans-serif'],
+        mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace']
       },
       colors: {
-        ink: {
-          50:  '#f5f7fa',
-          100: '#e7ecf2',
-          200: '#cbd5e1',
-          400: '#64748b',
-          700: '#334155',
-          900: '#0b1220',
-          950: '#070b15'
+        // CSS-variable driven so we can theme via :root
+        background:  'hsl(var(--background) / <alpha-value>)',
+        foreground:  'hsl(var(--foreground) / <alpha-value>)',
+        card:        'hsl(var(--card) / <alpha-value>)',
+        'card-foreground': 'hsl(var(--card-foreground) / <alpha-value>)',
+        muted:       'hsl(var(--muted) / <alpha-value>)',
+        'muted-foreground': 'hsl(var(--muted-foreground) / <alpha-value>)',
+        border:      'hsl(var(--border) / <alpha-value>)',
+        input:       'hsl(var(--input) / <alpha-value>)',
+        ring:        'hsl(var(--ring) / <alpha-value>)',
+        primary: {
+          DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
+          foreground: 'hsl(var(--primary-foreground) / <alpha-value>)'
         },
         accent: {
-          DEFAULT: '#facc15',  // yellow
-          600: '#eab308',
-          700: '#a16207'
-        },
-        ocean: {
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7'
+          DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
+          foreground: 'hsl(var(--accent-foreground) / <alpha-value>)'
         }
+      },
+      letterSpacing: {
+        tightest: '-0.06em'
+      },
+      keyframes: {
+        'pulse-slow': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.4' }
+        },
+        'fade-up': {
+          'from': { opacity: '0', transform: 'translateY(10px)' },
+          'to':   { opacity: '1', transform: 'translateY(0)' }
+        }
+      },
+      animation: {
+        'pulse-slow': 'pulse-slow 2.5s ease-in-out infinite',
+        'fade-up': 'fade-up 0.5s ease-out both'
       }
     }
   },

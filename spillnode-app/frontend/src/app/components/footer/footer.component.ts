@@ -9,53 +9,55 @@ import { NewsletterService } from '../../services/newsletter.service';
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule],
   template: `
-    <footer class="bg-ink-900 text-ink-100 mt-24">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 grid md:grid-cols-3 gap-12">
+    <footer class="border-t border-border mt-24">
+      <div class="max-w-7xl mx-auto px-6 sm:px-8 py-16 grid md:grid-cols-3 gap-12">
         <div>
-          <div class="flex items-center gap-2 mb-4">
-            <div class="w-9 h-9 rounded-xl bg-accent text-ink-900 flex items-center justify-center font-display font-extrabold">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 flex items-center justify-center bg-primary text-primary-foreground font-mono font-bold text-sm">
               &lt;/&gt;
             </div>
-            <span class="font-display font-extrabold text-lg">Spillnode</span>
+            <div class="font-heading font-black text-lg">spillnode</div>
           </div>
-          <p class="text-sm text-ink-200 leading-relaxed">
-            Master Java, Spring Boot, Angular, Next.js, full-stack & cloud — taught the way developers actually learn.
+          <p class="text-sm text-muted-foreground leading-relaxed max-w-xs">
+            Deep dives into Java, Spring Boot, Angular, Next.js and cloud — paired with end-to-end tutorials and the stories behind them.
           </p>
         </div>
 
         <div>
-          <h4 class="font-display font-bold mb-3 text-accent">Explore</h4>
-          <ul class="space-y-2 text-sm text-ink-200">
-            <li><a routerLink="/category/java" class="hover:text-accent transition-colors">Java</a></li>
-            <li><a routerLink="/category/spring-boot" class="hover:text-accent transition-colors">Spring Boot</a></li>
-            <li><a routerLink="/category/angular" class="hover:text-accent transition-colors">Angular</a></li>
-            <li><a routerLink="/category/nextjs" class="hover:text-accent transition-colors">Next.js</a></li>
-            <li><a routerLink="/about" class="hover:text-accent transition-colors">About</a></li>
+          <div class="code-label mb-4">// explore</div>
+          <ul class="space-y-2 text-sm">
+            <li><a routerLink="/category/java" class="text-muted-foreground hover:text-primary transition-colors">Java</a></li>
+            <li><a routerLink="/category/spring-boot" class="text-muted-foreground hover:text-primary transition-colors">Spring Boot</a></li>
+            <li><a routerLink="/category/angular" class="text-muted-foreground hover:text-primary transition-colors">Angular</a></li>
+            <li><a routerLink="/category/nextjs" class="text-muted-foreground hover:text-primary transition-colors">Next.js</a></li>
+            <li><a routerLink="/about" class="text-muted-foreground hover:text-primary transition-colors">About</a></li>
           </ul>
         </div>
 
         <div>
-          <h4 class="font-display font-bold mb-3 text-accent">Join the newsletter</h4>
-          <p class="text-sm text-ink-200 mb-3">Weekly drops on new tutorials and roadmaps.</p>
+          <div class="code-label mb-4">// newsletter.subscribe()</div>
+          <p class="text-sm text-muted-foreground mb-4">Weekly drops on new tutorials and roadmaps.</p>
           <form (ngSubmit)="subscribe()" class="flex gap-2">
             <input
               type="email" [(ngModel)]="email" name="email" required
               placeholder="you@dev.com"
               data-testid="footer-newsletter-email"
-              class="flex-1 px-3 py-2 rounded-full bg-ink-700 border border-ink-700 placeholder-ink-200 text-sm focus:outline-none focus:border-accent" />
-            <button type="submit" class="btn-pill btn-accent text-sm" data-testid="footer-newsletter-submit">
-              Join
+              class="flex-1 px-3 py-2 bg-card border border-border text-sm focus:outline-none focus:border-primary placeholder:text-muted-foreground" />
+            <button type="submit" class="btn btn-primary text-xs" data-testid="footer-newsletter-submit">
+              join
             </button>
           </form>
           @if (message) {
-            <p class="text-xs mt-2" [class.text-accent]="!error" [class.text-red-400]="error">{{ message }}</p>
+            <p class="font-mono text-xs mt-3" [class.text-primary]="!error" [class.text-red-500]="error">
+              {{ error ? '// error: ' : '// ✓ ' }}{{ message }}
+            </p>
           }
         </div>
       </div>
-      <div class="border-t border-ink-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 text-xs text-ink-200 flex flex-col sm:flex-row justify-between gap-2">
-          <span>© {{ year }} Spillnode. All rights reserved.</span>
-          <span>Made with care for developers.</span>
+      <div class="border-t border-border">
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 py-5 font-mono text-xs text-muted-foreground flex flex-col sm:flex-row justify-between gap-2">
+          <span>// © {{ year }} spillnode — all.rights.reserved()</span>
+          <span>built.with(&lt;3) for developers</span>
         </div>
       </div>
     </footer>

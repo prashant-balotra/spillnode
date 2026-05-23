@@ -8,59 +8,48 @@ import { Post } from '../../models/models';
   standalone: true,
   imports: [CommonModule, RouterLink, DatePipe],
   template: `
-    <a [routerLink]="['/post', post.slug]" class="card block overflow-hidden h-full"
+    <a [routerLink]="['/post', post.slug]"
+       class="group block border border-border hover:border-primary/60 transition-all bg-card relative overflow-hidden h-full"
        [attr.data-testid]="'post-card-' + post.slug">
-      <div class="aspect-[16/9] bg-ink-100 overflow-hidden relative">
+      <div class="aspect-[16/9] overflow-hidden bg-muted relative">
         @if (post.thumbnailUrl) {
-          <img [src]="post.thumbnailUrl" [alt]="post.title" class="w-full h-full object-cover" />
+          <img [src]="post.thumbnailUrl" [alt]="post.title" loading="lazy"
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         } @else {
-          <div class="w-full h-full bg-grain flex items-center justify-center font-display text-4xl text-ink-900/30">
+          <div class="w-full h-full flex items-center justify-center font-mono text-4xl text-muted-foreground/30">
             &lt;/&gt;
           </div>
         }
+        <div class="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent"></div>
+        <div class="absolute top-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] bg-primary text-primary-foreground px-2 py-1">
+          {{ post.category.slug }}
+        </div>
         @if (post.featured) {
-          <span class="absolute top-3 left-3 bg-accent text-ink-900 text-xs font-bold px-2 py-1 rounded-full">
-            FEATURED
-          </span>
+          <div class="absolute top-3 right-3 font-mono text-[10px] uppercase tracking-[0.2em] border border-primary text-primary px-2 py-1">
+            featured
+          </div>
         }
         @if (post.youtubeVideoId) {
-          <span class="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
-            ▶ VIDEO
-          </span>
+          <div class="absolute bottom-3 right-3 flex items-center gap-1 bg-red-600 text-white text-[10px] font-mono uppercase tracking-wider px-2 py-1">
+            ▶ video
+          </div>
         }
       </div>
       <div class="p-5">
-        <div class="flex items-center gap-2 text-xs mb-3">
-          <span class="px-2 py-1 rounded-full font-semibold"
-                [style.background-color]="post.category.colorHex + '22'"
-                [style.color]="post.category.colorHex">
-            {{ post.category.name }}
-          </span>
-          <span class="text-ink-400">·</span>
-          <span class="text-ink-400">{{ post.createdAt | date:'MMM d, y' }}</span>
-        </div>
-        <h3 class="font-display font-bold text-lg leading-tight mb-2 line-clamp-2">{{ post.title }}</h3>
+        <h3 class="font-heading text-xl font-bold tracking-tight group-hover:text-primary transition-colors line-clamp-2 mb-2">
+          {{ post.title }}
+        </h3>
         @if (post.excerpt) {
-          <p class="text-sm text-ink-700 line-clamp-2 mb-3">{{ post.excerpt }}</p>
+          <p class="text-sm text-muted-foreground line-clamp-2 leading-relaxed mb-4">{{ post.excerpt }}</p>
         }
-        <div class="flex items-center justify-between text-xs text-ink-400">
-          <span>By {{ post.author.name }}</span>
-          <span class="flex items-center gap-3">
-            <span>♥ {{ post.likeCount }}</span>
-            <span>👁 {{ post.viewCount }}</span>
-          </span>
+        <div class="flex items-center gap-4 text-xs text-muted-foreground font-mono">
+          <span class="flex items-center gap-1">👁 {{ post.viewCount }}</span>
+          <span class="flex items-center gap-1">♥ {{ post.likeCount }}</span>
+          <span>{{ post.createdAt | date:'MMM d, y' }}</span>
         </div>
       </div>
     </a>
-  `,
-  styles: [`
-    .line-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  `]
+  `
 })
 export class PostCardComponent {
   @Input({ required: true }) post!: Post;

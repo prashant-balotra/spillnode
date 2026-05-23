@@ -14,38 +14,41 @@ import { Post, Comment } from '../../models/models';
   imports: [CommonModule, RouterLink, FormsModule, DatePipe],
   template: `
     @if (post) {
-      <article class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+      <article class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
+        <div class="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-3">
+          // post.{{ post.category.slug }}
+        </div>
+
         <a [routerLink]="['/category', post.category.slug]"
-           class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-4"
-           [style.background-color]="post.category.colorHex + '22'"
-           [style.color]="post.category.colorHex">
-          {{ post.category.name }}
+           class="inline-block font-mono text-xs uppercase tracking-[0.2em] bg-primary text-primary-foreground px-2 py-1 mb-6">
+          {{ post.category.slug }}
         </a>
-        <h1 class="font-display text-4xl sm:text-5xl font-extrabold leading-tight tracking-tight">
+
+        <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-black tracking-tightest leading-[1.0]">
           {{ post.title }}
         </h1>
 
-        <div class="mt-5 flex flex-wrap items-center gap-4 text-sm text-ink-400">
-          <span>By <strong class="text-ink-900">{{ post.author.name }}</strong></span>
-          <span>·</span>
+        <div class="mt-6 flex flex-wrap items-center gap-4 font-mono text-xs text-muted-foreground border-y border-border py-4">
+          <span>by <strong class="text-foreground">{{ post.author.name }}</strong></span>
+          <span class="text-muted-foreground/50">·</span>
           <span>{{ post.createdAt | date:'MMM d, y' }}</span>
-          <span>·</span>
+          <span class="text-muted-foreground/50">·</span>
           <span>👁 {{ post.viewCount }} reads</span>
           <button (click)="toggleLike()"
-            class="ml-auto btn-pill text-sm"
-            [class.btn-accent]="liked" [class.btn-ghost]="!liked"
+            class="ml-auto btn text-xs"
+            [class.btn-primary]="liked" [class.btn-outline]="!liked"
             data-testid="post-like-btn">
-            ♥ {{ post.likeCount }} {{ liked ? 'Liked' : 'Like' }}
+            ♥ {{ post.likeCount }} {{ liked ? 'liked' : 'like' }}
           </button>
         </div>
 
         @if (post.thumbnailUrl) {
           <img [src]="post.thumbnailUrl" [alt]="post.title"
-               class="w-full aspect-video object-cover rounded-2xl mt-8 mb-2" />
+               class="w-full aspect-video object-cover border border-border mt-10 mb-2" />
         }
 
         @if (youtubeEmbed) {
-          <div class="aspect-video rounded-2xl overflow-hidden mt-6 bg-ink-900">
+          <div class="aspect-video border border-border overflow-hidden mt-6 bg-card">
             <iframe [src]="youtubeEmbed" frameborder="0" class="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
                     allowfullscreen></iframe>
@@ -55,49 +58,50 @@ import { Post, Comment } from '../../models/models';
         @if (post.tags.length) {
           <div class="flex flex-wrap gap-2 mt-6">
             @for (t of post.tags; track t) {
-              <span class="px-2 py-1 rounded-full bg-ink-100 text-xs text-ink-700">#{{ t }}</span>
+              <span class="font-mono text-xs px-2 py-1 border border-border text-muted-foreground">#{{ t }}</span>
             }
           </div>
         }
 
-        <div class="prose-content mt-8" [innerHTML]="post.content"></div>
+        <div class="prose-content mt-10" [innerHTML]="post.content"></div>
 
         <!-- Comments -->
-        <section class="mt-16 pt-8 border-t border-ink-100">
-          <h3 class="font-display text-2xl font-extrabold">💬 Comments ({{ comments.length }})</h3>
+        <section class="mt-20 pt-10 border-t border-border">
+          <div class="code-label mb-3">// comments ({{ comments.length }})</div>
+          <h3 class="font-heading text-2xl font-black tracking-tight">Discussion</h3>
 
           @if (auth.isLoggedInSig()) {
-            <form (ngSubmit)="addComment()" class="mt-6 card p-4">
+            <form (ngSubmit)="addComment()" class="mt-6 border border-border bg-card p-4">
               <textarea [(ngModel)]="newComment" name="newComment" rows="3" required
-                placeholder="Share your thoughts..." data-testid="comment-input"
-                class="w-full px-3 py-2 rounded-lg border border-ink-100 focus:border-accent focus:outline-none text-sm"></textarea>
+                placeholder="// share your thoughts..." data-testid="comment-input"
+                class="w-full px-3 py-2 bg-background border border-border focus:border-primary focus:outline-none text-sm font-mono"></textarea>
               <div class="flex justify-end mt-3">
-                <button class="btn-pill btn-primary text-sm" data-testid="comment-submit">Post comment</button>
+                <button class="btn btn-primary text-xs" data-testid="comment-submit">post.comment()</button>
               </div>
             </form>
           } @else {
-            <div class="mt-6 p-4 rounded-xl bg-ink-50 text-sm">
-              <a routerLink="/login" class="font-semibold text-accent-700 hover:underline">Sign in</a>
+            <div class="mt-6 p-4 border border-border bg-card font-mono text-sm text-muted-foreground">
+              <a routerLink="/login" class="text-primary font-semibold hover:underline">sign.in()</a>
               to leave a comment.
             </div>
           }
 
-          <ul class="mt-8 space-y-4">
+          <ul class="mt-8 space-y-3">
             @for (c of comments; track c.id) {
-              <li class="card p-4">
+              <li class="border border-border bg-card p-4">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="font-semibold text-sm">{{ c.user.name }}</span>
-                  <span class="text-xs text-ink-400">{{ c.createdAt | date:'short' }}</span>
+                  <span class="font-mono text-xs text-primary">{{ c.user.name }}</span>
+                  <span class="font-mono text-[10px] text-muted-foreground">{{ c.createdAt | date:'short' }}</span>
                 </div>
-                <p class="text-sm text-ink-700">{{ c.content }}</p>
+                <p class="text-sm text-foreground/85">{{ c.content }}</p>
                 @if (canDelete(c)) {
-                  <button (click)="deleteComment(c.id)" class="text-xs text-red-600 mt-2 hover:underline">
-                    Delete
+                  <button (click)="deleteComment(c.id)" class="font-mono text-[10px] text-red-500 mt-3 hover:underline">
+                    delete()
                   </button>
                 }
               </li>
             } @empty {
-              <li class="text-sm text-ink-400">No comments yet — be the first!</li>
+              <li class="font-mono text-sm text-muted-foreground">// no comments yet — be the first</li>
             }
           </ul>
         </section>
@@ -130,7 +134,6 @@ export class PostDetailComponent implements OnInit {
             `https://www.youtube.com/embed/${post.youtubeVideoId}`);
         }
         this.commentService.list(post.id).subscribe(cs => this.comments = cs);
-        // load liked state
         if (this.auth.isLoggedIn()) {
           this.auth.me().subscribe(me => {
             this.liked = (me.likedPostIds ?? []).includes(post.id);
