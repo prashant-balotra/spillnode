@@ -26,12 +26,20 @@
   }
 
   html, body {
-    height: 100%;
+    /* No fixed height — let body grow with content so sticky positioning
+       uses the viewport as the scroll port. */
   }
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
+    min-height: 100vh;
+  }
+
+  /* Custom elements default to display: inline, which breaks position: sticky
+     by not forming a proper block-level containing block. Force block. */
+  app-root, app-navbar, app-footer, app-logo, app-cat-icon, app-post-card {
+    display: block;
   }
 
   ::selection {

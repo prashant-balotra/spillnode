@@ -9,8 +9,18 @@ import { LogoComponent } from '../logo/logo.component';
   selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, FormsModule, LogoComponent],
+  // :host CSS is bulletproof — doesn't depend on Tailwind picking up host-attribute classes
+  styles: [`
+    :host {
+      display: block;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      width: 100%;
+    }
+  `],
   template: `
-    <header class="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border supports-[backdrop-filter]:bg-background/60">
+    <header class="backdrop-blur-xl bg-background/70 border-b border-border supports-[backdrop-filter]:bg-background/60">
       <nav class="max-w-7xl mx-auto px-6 sm:px-8 h-16 flex items-center gap-6">
         <a routerLink="/" class="shrink-0 transition-opacity hover:opacity-90" data-testid="nav-logo">
           <app-logo></app-logo>

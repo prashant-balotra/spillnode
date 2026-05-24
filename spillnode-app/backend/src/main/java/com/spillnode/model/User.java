@@ -1,5 +1,6 @@
 package com.spillnode.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
@@ -34,6 +36,20 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * Many-to-Many with Post.
+     * @JsonIgnore — prevents Jackson infinite-recursion when serializing
+     * Post.author (which would try to serialize User.likedPosts → Post → author → ...)
+     * and avoids returning a giant nested payload on every post response.
+     */
+    @JsonIgnore
+    /**
+     * Many-to-Many with Post.
+     * @JsonIgnore — prevents Jackson infinite-recursion when serializing
+     * Post.author (which would try to serialize User.likedPosts → Post → author → ...)
+     * and avoids returning a giant nested payload on every post response.
+     */
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
         name = "user_liked_posts",

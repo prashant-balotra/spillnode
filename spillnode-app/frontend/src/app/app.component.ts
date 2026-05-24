@@ -7,14 +7,15 @@ import { FooterComponent } from './components/footer/footer.component';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, NavbarComponent, FooterComponent],
+  // No flex wrapper — `position: sticky` on the navbar depends on the body
+  // (or root block container) being the scrolling element, which a flex column
+  // wrapper subtly breaks in some browsers.
   template: `
-    <div class="min-h-screen flex flex-col">
-      <app-navbar></app-navbar>
-      <main class="flex-1">
-        <router-outlet />
-      </main>
-      <app-footer></app-footer>
-    </div>
+    <app-navbar></app-navbar>
+    <main>
+      <router-outlet />
+    </main>
+    <app-footer></app-footer>
   `
 })
 export class AppComponent {}

@@ -168,6 +168,78 @@ public class DataSeeder implements CommandLineRunner {
                 null,
                 Set.of("system-design", "interview", "scalability"),
                 false);
+
+        // ===== Full Stack =====
+        savePost(admin, bySlug.get("full-stack"),
+                "Build a Blog From Scratch — Spring Boot + Angular",
+                "An end-to-end walkthrough of the exact stack powering SpillNode: JWT auth, JPA, Angular standalone components.",
+                "<h2>What we'll build</h2><p>By the end you'll have a deployable blog with JWT auth, role-based admin dashboard, categories, tags, comments, likes, newsletter signup and YouTube integration.</p>" +
+                "<h2>Backend skeleton</h2><p>Spring Boot 3 + Spring Data JPA. MySQL for prod, H2 for local dev. Spring Security with stateless JWT.</p>" +
+                "<pre><code>&#64;RestController\n&#64;RequestMapping(\"/api/posts\")\npublic class PostController {\n  &#64;PostMapping\n  &#64;PreAuthorize(\"hasRole('ADMIN')\")\n  public Post create(&#64;Valid &#64;RequestBody PostRequest req) {\n    return postService.create(req);\n  }\n}</code></pre>" +
+                "<h2>Frontend skeleton</h2><p>Angular 17 standalone components + Tailwind. Lazy-loaded routes, route guards, HTTP interceptor for JWT.</p>" +
+                "<blockquote>Building end-to-end is the fastest way to understand how the pieces actually talk to each other.</blockquote>",
+                "https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg",
+                null,
+                Set.of("tutorial", "end-to-end", "project"),
+                true);
+
+        savePost(admin, bySlug.get("full-stack"),
+                "Adding Real-Time Updates with WebSockets",
+                "Wire a Spring Boot STOMP endpoint to an Angular client and push live notifications without polling.",
+                "<h2>Why WebSockets</h2><p>Polling is wasteful. Long-polling is fragile. WebSockets give you a bidirectional, low-latency channel that's perfect for chat, notifications and live dashboards.</p>" +
+                "<h2>Spring side</h2><pre><code>&#64;Configuration\n&#64;EnableWebSocketMessageBroker\npublic class WsConfig implements WebSocketMessageBrokerConfigurer {\n  &#64;Override\n  public void configureMessageBroker(MessageBrokerRegistry r) {\n    r.enableSimpleBroker(\"/topic\");\n    r.setApplicationDestinationPrefixes(\"/app\");\n  }\n}</code></pre>" +
+                "<h2>Angular side</h2><p>Use <code>&#64;stomp/stompjs</code> + <code>sockjs-client</code> to subscribe to <code>/topic/notifications</code> and update a signal.</p>",
+                "https://images.pexels.com/photos/17489150/pexels-photo-17489150.jpeg",
+                null,
+                Set.of("websockets", "realtime", "stomp"),
+                false);
+
+        // ===== DSA =====
+        savePost(admin, bySlug.get("dsa"),
+                "LeetCode Patterns: Sliding Window Cheat Sheet",
+                "One technique, fifteen problems. Master sliding window and 15% of LeetCode opens up overnight.",
+                "<h2>The pattern</h2><p>Sliding window converts an O(n²) brute force into O(n) by maintaining a running view of a contiguous subarray/substring.</p>" +
+                "<h2>The template</h2><pre><code>int left = 0;\nfor (int right = 0; right &lt; n; right++) {\n  // expand right\n  while (/* invariant broken */) {\n    // shrink left\n    left++;\n  }\n  // update answer using window [left, right]\n}</code></pre>" +
+                "<h2>Problems that yield to it</h2><ul><li>Longest substring without repeating characters</li><li>Minimum window substring</li><li>Max sum subarray of size k</li><li>Permutation in string</li></ul>" +
+                "<blockquote>Pattern recognition is the real skill. Algorithm trivia is just the vocabulary.</blockquote>",
+                "https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg",
+                null,
+                Set.of("sliding-window", "leetcode", "patterns"),
+                true);
+
+        savePost(admin, bySlug.get("dsa"),
+                "Binary Search Beyond Sorted Arrays",
+                "Binary search isn't just for finding an element in a sorted array — it's a way of thinking about monotonic predicates.",
+                "<h2>The mental model</h2><p>If you can answer \"is X possible?\" as a yes/no for any candidate value, AND the answer transitions monotonically, you can binary-search the answer space.</p>" +
+                "<pre><code>int lo = 1, hi = max;\nwhile (lo &lt; hi) {\n  int mid = lo + (hi - lo) / 2;\n  if (canDo(mid)) hi = mid;\n  else            lo = mid + 1;\n}\nreturn lo;</code></pre>" +
+                "<h2>Classic applications</h2><ul><li>Capacity to ship packages within D days</li><li>Koko eating bananas</li><li>Split array largest sum</li><li>Median of two sorted arrays</li></ul>",
+                "https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg",
+                null,
+                Set.of("binary-search", "leetcode", "algorithms"),
+                false);
+
+        // ===== Extra Java + Spring Boot =====
+        savePost(admin, bySlug.get("java"),
+                "Virtual Threads in Java 21 — Practical Guide",
+                "Project Loom is GA. Here's when to use virtual threads, when to avoid them, and the gotchas that bite in production.",
+                "<h2>What changed</h2><p>Virtual threads decouple Java threads from OS threads. Spawn a million of them — they're cheap, schedulable in user-space, and finally make \"thread per request\" viable again.</p>" +
+                "<pre><code>try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {\n  IntStream.range(0, 10_000).forEach(i -&gt;\n    exec.submit(() -&gt; httpClient.send(req)));\n}</code></pre>" +
+                "<h2>When to use</h2><p>I/O-bound workloads — HTTP clients, JDBC, message queues. <strong>Not</strong> CPU-bound work and <strong>not</strong> with <code>synchronized</code> blocks that pin to a carrier thread.</p>",
+                "https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg",
+                null,
+                Set.of("virtual-threads", "loom", "java-21"),
+                false);
+
+        savePost(admin, bySlug.get("spring-boot"),
+                "Spring Boot Caching with Redis — Done Properly",
+                "Drop-in caching with @Cacheable, plus the eviction strategy that won't blow up at 3am.",
+                "<h2>Setup</h2><p>Add <code>spring-boot-starter-data-redis</code>, then <code>@EnableCaching</code> on your main class.</p>" +
+                "<pre><code>&#64;Cacheable(value = \"posts\", key = \"#slug\")\npublic Post getBySlug(String slug) {\n  return repo.findBySlug(slug).orElseThrow();\n}\n\n&#64;CacheEvict(value = \"posts\", key = \"#post.slug\")\npublic Post update(Post post) { ... }</code></pre>" +
+                "<h2>The non-obvious bits</h2><ul><li>Always set TTLs — unbounded caches are bugs in waiting</li><li>Cache key collisions across services? Prefix your keys with the service name</li><li>For burst traffic, use a request-coalescer (single-flight) in front of the cache</li></ul>",
+                "https://images.pexels.com/photos/17489150/pexels-photo-17489150.jpeg",
+                null,
+                Set.of("redis", "caching", "performance"),
+                false);
     }
 
     private void savePost(User author, Category category, String title, String excerpt,
