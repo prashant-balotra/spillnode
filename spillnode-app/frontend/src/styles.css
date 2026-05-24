@@ -16,13 +16,13 @@
 
     --border: 240 5% 18%;              /* zinc-800 */
     --input: 240 5% 16%;
-    --ring: 38 92% 50%;                /* amber-500 */
+    --ring: 160 84% 39%;               /* emerald-500 */
 
-    --primary: 38 92% 50%;             /* amber-500 #f59e0b */
-    --primary-foreground: 240 10% 4%;  /* black-ish */
+    --primary: 160 84% 39%;            /* emerald-500 #10b981 */
+    --primary-foreground: 0 0% 100%;   /* white */
 
-    --accent: 38 92% 50%;
-    --accent-foreground: 240 10% 4%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
   }
 
   html, body {
@@ -48,11 +48,11 @@
 
 /* ===== Utility classes (mirroring the reference theme) ===== */
 
-/* Soft amber radial wash for hero sections */
+/* Soft emerald radial wash for hero sections */
 .gradient-amber-soft {
   background:
-    radial-gradient(60% 50% at 15% 20%, hsl(38 92% 50% / 0.18), transparent 60%),
-    radial-gradient(50% 40% at 90% 10%, hsl(38 92% 50% / 0.10), transparent 70%);
+    radial-gradient(60% 50% at 15% 20%, hsl(160 84% 39% / 0.18), transparent 60%),
+    radial-gradient(50% 40% at 90% 10%, hsl(160 84% 39% / 0.10), transparent 70%);
 }
 
 /* SVG grain texture overlay */

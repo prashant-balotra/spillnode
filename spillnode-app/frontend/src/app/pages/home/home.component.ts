@@ -6,11 +6,12 @@ import { CategoryService } from '../../services/category.service';
 import { YouTubeApiService } from '../../services/newsletter.service';
 import { Category, Post, YouTubeVideo } from '../../models/models';
 import { PostCardComponent } from '../../components/post-card/post-card.component';
+import { CatIconComponent } from '../../components/cat-icon/cat-icon.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, PostCardComponent],
+  imports: [CommonModule, RouterLink, PostCardComponent, CatIconComponent],
   template: `
     <!-- ===== Hero ===== -->
     <section class="relative overflow-hidden border-b border-border">
@@ -26,15 +27,15 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
                 <path d="m7 11 2-2-2-2"></path><path d="M11 13h4"></path>
                 <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
               </svg>
-              // welcome.to(Spillnode)
+              // welcome.to(SpillNode)
             </div>
             <h1 class="font-heading text-4xl sm:text-5xl lg:text-7xl font-black tracking-tightest leading-[0.95] mb-6">
-              Cruise through<br>
+              Spilling<br>
               <span class="text-primary">code</span>, concepts &amp;<br>
               real-world <span class="italic font-light">builds</span>.
             </h1>
             <p class="text-lg text-muted-foreground max-w-xl leading-relaxed mb-8">
-              Deep dives into Java, Spring Boot, Angular, Next.js and cloud — paired with end-to-end tutorials and the stories behind them.
+              A network of developers spilling what they learn — Java, Spring Boot, Angular, Next.js, and cloud. Real tutorials, real projects, real wins.
             </p>
 
             <div class="flex flex-wrap gap-3">
@@ -70,7 +71,7 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
 
           <div class="lg:col-span-5 relative">
             <div class="relative aspect-[4/5] border border-border overflow-hidden">
-              <img alt="Programmer at work" loading="lazy" class="w-full h-full object-cover"
+              <img alt="Developer at work" loading="lazy" class="w-full h-full object-cover"
                 src="https://images.pexels.com/photos/5473337/pexels-photo-5473337.jpeg" />
               <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
               <div class="absolute bottom-6 left-6 right-6 font-mono text-xs text-muted-foreground">
@@ -107,7 +108,7 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
         @for (p of latest; track p.id) {
           <app-post-card [post]="p"></app-post-card>
         } @empty {
-          <p class="text-muted-foreground col-span-3 font-mono text-sm">// no posts found</p>
+          <p class="text-muted-foreground col-span-3 font-mono text-sm">// no posts yet — sign in as admin to publish the first one</p>
         }
       </div>
     </section>
@@ -129,7 +130,9 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
               <span class="font-mono text-xs text-muted-foreground">{{ pad(i+1) }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground/60 group-hover:text-primary group-hover:-translate-y-1 group-hover:translate-x-1 transition-all"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
             </div>
-            <div class="mb-4" [style.color]="c.colorHex" [innerHTML]="getCategoryIcon(c.slug)"></div>
+            <div class="mb-4" [style.color]="c.colorHex">
+              <app-cat-icon [slug]="c.slug" [size]="28"></app-cat-icon>
+            </div>
             <h3 class="font-heading text-xl font-bold tracking-tight mb-1 group-hover:text-primary transition-colors">{{ c.name }}</h3>
             @if (c.description) {
               <p class="text-xs text-muted-foreground line-clamp-2 mb-4">{{ c.description }}</p>
@@ -193,12 +196,11 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
            class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all rounded-sm"
            data-testid="cta-subscribe-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path><path d="m10 15 5-3-5-3z"></path></svg>
-          Subscribe to Spillnode
+          Subscribe to SpillNode
         </a>
       </div>
     </section>
 
-    <!-- ===== YouTube videos (if API key set) ===== -->
     @if (videos.length) {
       <section class="max-w-7xl mx-auto px-6 sm:px-8 py-20 border-t border-border">
         <div class="mb-10">
@@ -255,7 +257,6 @@ export class HomeComponent implements OnInit {
       this.latest = p.content;
       this.totalPosts = p.totalElements;
     });
-    // Tally posts per category once
     if (!Object.keys(this.categoryCount).length) {
       this.postService.list({ size: 200 }).subscribe(all => {
         const counts: Record<string, number> = {};
@@ -268,19 +269,4 @@ export class HomeComponent implements OnInit {
   }
 
   pad(n: number): string { return n.toString().padStart(2, '0'); }
-
-  getCategoryIcon(slug: string): string {
-    const size = 'width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
-    const icons: Record<string, string> = {
-      'java': `<svg xmlns="http://www.w3.org/2000/svg" ${size}><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></svg>`,
-      'spring-boot': `<svg xmlns="http://www.w3.org/2000/svg" ${size}><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`,
-      'angular': `<svg xmlns="http://www.w3.org/2000/svg" ${size}><path d="M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/></svg>`,
-      'nextjs': `<svg xmlns="http://www.w3.org/2000/svg" ${size}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`,
-      'full-stack': `<svg xmlns="http://www.w3.org/2000/svg" ${size}><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>`,
-      'cloud': `<svg xmlns="http://www.w3.org/2000/svg" ${size}><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`,
-      'dsa': `<svg xmlns="http://www.w3.org/2000/svg" ${size}><rect x="14" y="14" width="4" height="6" rx="2"/><rect x="6" y="4" width="4" height="6" rx="2"/><path d="M6 20h4"/><path d="M14 10h4"/><path d="M6 14h2v6"/><path d="M14 4h2v6"/></svg>`,
-      'system-design': `<svg xmlns="http://www.w3.org/2000/svg" ${size}><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>`
-    };
-    return icons[slug] || `<svg xmlns="http://www.w3.org/2000/svg" ${size}><circle cx="12" cy="12" r="10"/></svg>`;
-  }
 }

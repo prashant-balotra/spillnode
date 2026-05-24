@@ -10,17 +10,18 @@ import { RouterLink } from '@angular/router';
     <section class="max-w-4xl mx-auto px-6 sm:px-8 py-20">
       <div class="code-label mb-4">// about.spillnode</div>
       <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-black tracking-tightest leading-[0.95]">
-        Hey, I'm the developer behind <span class="text-primary">CodingCruiser</span>.
+        A network of devs <span class="text-primary">spilling</span> what they learn.
       </h1>
 
       <div class="prose-content mt-10 text-lg">
         <p>
-          Spillnode is the written companion to the CodingCruiser YouTube channel — where I share what I learn
-          while shipping real software. Java, Spring Boot, Angular, Next.js, full-stack projects, and now cloud.
+          <strong>SpillNode</strong> is a home for developer-to-developer knowledge. Tutorials, deep dives,
+          and end-to-end project breakdowns across Java, Spring Boot, Angular, Next.js, full-stack and cloud —
+          written by people who actually ship.
         </p>
         <p>
-          This site brings those tutorials into one focused home where you can read, search, and learn at
-          your own pace — no algorithm to fight, no fluff to scroll past.
+          Every post is one node in a growing network. Follow a track, jump between topics, or search your way
+          to the exact answer. No fluff, no listicles, no SEO theatre.
         </p>
 
         <h2>What you'll find here</h2>
@@ -28,7 +29,8 @@ import { RouterLink } from '@angular/router';
           <li>End-to-end project tutorials with code walkthroughs</li>
           <li>Deep dives into Spring Boot internals, JPA, security and REST design</li>
           <li>Angular &amp; Next.js patterns that scale beyond demos</li>
-          <li>Cloud deployments — coming soon</li>
+          <li>DSA and system design notes that hold up in interviews</li>
+          <li>Cloud deployments — Docker, Kubernetes, AWS</li>
         </ul>
 
         <h2>How posts are structured</h2>
@@ -43,14 +45,18 @@ import { RouterLink } from '@angular/router';
 
         <h2>Want to connect?</h2>
         <p>
-          Subscribe to the newsletter below — I send a short note when a new tutorial drops.
-          You can also drop comments on any post and I'll get back to you.
+          Subscribe to the newsletter below — a short note when a new tutorial drops.
+          Drop a comment on any post and we'll spill back.
         </p>
       </div>
 
       <div class="mt-12 flex flex-wrap gap-3">
-        <a routerLink="/" class="btn btn-primary">Browse tutorials →</a>
-        <a routerLink="/category/spring-boot" class="btn btn-outline">Start with Spring Boot</a>
+        <a routerLink="/categories" class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all rounded-sm">
+          Browse tracks →
+        </a>
+        <a routerLink="/category/spring-boot" class="inline-flex items-center gap-2 px-6 py-3 border border-border hover:border-primary text-foreground font-semibold transition-all rounded-sm">
+          Start with Spring Boot
+        </a>
       </div>
     </section>
   `

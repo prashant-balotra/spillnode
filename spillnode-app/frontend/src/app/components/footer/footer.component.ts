@@ -3,17 +3,19 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NewsletterService } from '../../services/newsletter.service';
+import { LogoComponent } from '../logo/logo.component';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, LogoComponent],
   template: `
     <footer class="border-t border-border mt-24">
       <div class="max-w-7xl mx-auto px-6 sm:px-8 py-16 grid md:grid-cols-12 gap-10">
         <!-- Newsletter -->
         <div class="md:col-span-5">
-          <div class="code-label mb-4">// NEWSLETTER</div>
+          <div class="mb-5"><app-logo></app-logo></div>
+          <div class="code-label mb-3">// NEWSLETTER</div>
           <h3 class="font-heading text-2xl font-black tracking-tight mb-3">Ship coding insights to your inbox.</h3>
           <p class="text-sm text-muted-foreground leading-relaxed mb-6 max-w-md">
             Weekly drops on Java, Spring Boot, Angular, Next.js and cloud. No fluff, just code that compiles.
@@ -83,7 +85,7 @@ import { NewsletterService } from '../../services/newsletter.service';
 
       <div class="border-t border-border">
         <div class="max-w-7xl mx-auto px-6 sm:px-8 py-5 text-xs text-muted-foreground flex flex-col sm:flex-row justify-between gap-2">
-          <span>© {{ year }} Spillnode. All systems nominal.</span>
+          <span>© {{ year }} SpillNode. All systems nominal.</span>
           <span>Built with curiosity. Powered by caffeine.</span>
         </div>
       </div>

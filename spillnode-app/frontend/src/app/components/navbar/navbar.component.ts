@@ -3,23 +3,19 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { LogoComponent } from '../logo/logo.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, FormsModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, FormsModule, LogoComponent],
   template: `
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-background/90 border-b border-border">
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border supports-[backdrop-filter]:bg-background/60">
       <nav class="max-w-7xl mx-auto px-6 sm:px-8 h-16 flex items-center gap-6">
-        <!-- Logo -->
-        <a routerLink="/" class="flex items-center gap-3 shrink-0" data-testid="nav-logo">
-          <div class="w-9 h-9 flex items-center justify-center bg-primary text-primary-foreground font-mono font-bold text-xs">
-            SN
-          </div>
-          <span class="font-heading font-black text-lg tracking-tight hidden sm:inline">Spillnode</span>
+        <a routerLink="/" class="shrink-0 transition-opacity hover:opacity-90" data-testid="nav-logo">
+          <app-logo></app-logo>
         </a>
 
-        <!-- Main links -->
         <div class="hidden md:flex items-center gap-1">
           <a routerLink="/" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact:true}"
              class="px-3 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">Home</a>
@@ -29,7 +25,6 @@ import { AuthService } from '../../services/auth.service';
              class="px-3 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">About</a>
         </div>
 
-        <!-- Search -->
         <form (ngSubmit)="onSearch()" class="flex-1 max-w-xl mx-auto hidden md:flex">
           <div class="w-full flex items-center bg-card border border-border focus-within:border-primary transition-colors h-10 px-3">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -45,7 +40,6 @@ import { AuthService } from '../../services/auth.service';
           </div>
         </form>
 
-        <!-- Auth -->
         <div class="flex items-center gap-3 shrink-0 ml-auto md:ml-0">
           @if (auth.isLoggedInSig()) {
             @if (auth.isAdminSig()) {

@@ -56,26 +56,32 @@ public class DataSeeder implements CommandLineRunner {
             return saved;
         });
 
-        // 2. Categories
+        // 2. Categories — 8 tracks matching the SpillNode taxonomy
         List<Category> defaults = List.of(
                 Category.builder().name("Java").slug("java")
-                        .description("Core Java, JVM, concurrency, design patterns")
-                        .iconName("coffee").colorHex("#f89820").build(),
+                        .description("Core Java, OOP, JVM, Collections, Concurrency")
+                        .iconName("coffee").colorHex("#f59e0b").build(),
                 Category.builder().name("Spring Boot").slug("spring-boot")
-                        .description("REST APIs, Spring Security, microservices")
-                        .iconName("leaf").colorHex("#6db33f").build(),
+                        .description("REST APIs, JPA, Security, Microservices")
+                        .iconName("leaf").colorHex("#10b981").build(),
                 Category.builder().name("Angular").slug("angular")
-                        .description("Components, RxJS, routing, state")
-                        .iconName("triangle").colorHex("#dd0031").build(),
+                        .description("Components, Services, RxJS, NgRx")
+                        .iconName("triangle").colorHex("#ef4444").build(),
                 Category.builder().name("Next.js").slug("nextjs")
-                        .description("App router, SSR, server components")
-                        .iconName("zap").colorHex("#0ea5e9").build(),
+                        .description("App Router, SSR, ISR, Server Actions")
+                        .iconName("arrow-right").colorHex("#a1a1aa").build(),
                 Category.builder().name("Full Stack").slug("full-stack")
-                        .description("End-to-end project tutorials")
-                        .iconName("layers").colorHex("#8b5cf6").build(),
+                        .description("End-to-end app development")
+                        .iconName("layers").colorHex("#f59e0b").build(),
                 Category.builder().name("Cloud").slug("cloud")
-                        .description("AWS, GCP, deployment, devops")
-                        .iconName("cloud").colorHex("#0284c7").build()
+                        .description("AWS, Azure, GCP, Docker, Kubernetes")
+                        .iconName("cloud").colorHex("#10b981").build(),
+                Category.builder().name("DSA").slug("dsa")
+                        .description("Data Structures & Algorithms")
+                        .iconName("binary").colorHex("#ef4444").build(),
+                Category.builder().name("System Design").slug("system-design")
+                        .description("Scalable architecture patterns")
+                        .iconName("network").colorHex("#f59e0b").build()
         );
         for (Category c : defaults) {
             if (!categoryRepository.existsBySlug(c.getSlug())) {
@@ -84,7 +90,7 @@ public class DataSeeder implements CommandLineRunner {
         }
         System.out.println(">>> Seeded default categories");
 
-        // 3. Sample posts
+        // 3. Sample posts — seed only if NO posts exist yet
         if (seedSamplePosts && postRepository.count() == 0) {
             seedSamplePosts(admin);
             System.out.println(">>> Seeded sample posts");
@@ -95,67 +101,72 @@ public class DataSeeder implements CommandLineRunner {
         Map<String, Category> bySlug = new java.util.HashMap<>();
         categoryRepository.findAll().forEach(c -> bySlug.put(c.getSlug(), c));
 
-        savePost(admin, bySlug.get("java"),
-                "Java Streams: from zero to fluent in 15 minutes",
-                "A pragmatic tour of Java Streams — map, filter, reduce, collectors, and the gotchas that trip up beginners.",
-                "<h2>Why streams?</h2><p>Java Streams let you express data transformations declaratively. Instead of writing loops, you describe <em>what</em> you want.</p>" +
-                "<pre><code>List&lt;String&gt; upper = names.stream()\n  .filter(n -&gt; n.length() &gt; 3)\n  .map(String::toUpperCase)\n  .toList();</code></pre>" +
-                "<h2>The 3 operations you'll use 90% of the time</h2><ul><li><code>filter</code> — keep elements matching a predicate</li><li><code>map</code> — transform each element</li><li><code>collect</code> / <code>toList()</code> — materialize the result</li></ul>" +
-                "<blockquote>Streams are lazy — nothing runs until a terminal operation kicks in.</blockquote>" +
-                "<h2>Common pitfalls</h2><p>Don't reuse a stream. Don't mutate the source. And remember: parallel isn't always faster.</p>",
-                "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=70",
-                "grCTXGW3exQ",
-                Set.of("streams", "functional", "java-8"),
-                true);
-
-        savePost(admin, bySlug.get("spring-boot"),
-                "Spring Boot 3 + JWT Auth: the complete walkthrough",
-                "Wire up stateless JWT authentication in Spring Boot 3 the right way — security filter chain, password encoding, role-based access.",
-                "<h2>The architecture</h2><p>JWT auth = <strong>stateless</strong>. The server doesn't keep sessions; the token <em>is</em> the session.</p>" +
-                "<h2>Pieces you need</h2><ul><li><code>JwtService</code> — sign &amp; verify tokens</li><li><code>JwtAuthFilter</code> — extract token from header, populate <code>SecurityContext</code></li><li><code>SecurityConfig</code> — wire the filter into the chain, define rules</li></ul>" +
-                "<pre><code>http\n  .authorizeHttpRequests(a -&gt; a\n    .requestMatchers(\"/api/auth/**\").permitAll()\n    .anyRequest().authenticated())\n  .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);</code></pre>" +
-                "<h2>Watch out for</h2><p>Token expiration handling on the client, CORS preflight (<code>OPTIONS</code>) requests, and don't ever store tokens in <code>localStorage</code> for high-security apps — use httpOnly cookies.</p>",
-                "https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=1200&q=70",
-                "KYNR5js2cXE",
-                Set.of("jwt", "security", "rest-api"),
-                true);
-
         savePost(admin, bySlug.get("angular"),
-                "Angular 17 standalone components: the new mental model",
-                "Goodbye NgModules, hello standalone. Here's how routing, lazy loading and DI changed in Angular 17.",
-                "<h2>What changed?</h2><p>Every component, directive and pipe can now declare its own imports. No more <code>NgModule</code> ceremony.</p>" +
-                "<pre><code>&#64;Component({\n  selector: 'app-home',\n  standalone: true,\n  imports: [CommonModule, RouterLink]\n})\nexport class HomeComponent {}</code></pre>" +
-                "<h2>Lazy loading made simple</h2><p>Lazy-load routes by pointing at the component directly:</p>" +
-                "<pre><code>{ path: 'about', loadComponent: () =&gt; import('./about.component').then(m =&gt; m.AboutComponent) }</code></pre>" +
-                "<h2>Signals on the horizon</h2><p>Combine standalone components with signals and you get a reactivity model that's far simpler than RxJS for most UI state.</p>",
-                "https://images.unsplash.com/photo-1599507593362-3acb13f4a99e?w=1200&q=70",
+                "Angular Signals: A Practical Guide",
+                "Replace BehaviorSubject and OnPush ceremony with the new Signals API.",
+                "<h2>What changed?</h2><p>Angular Signals offer a simpler, more declarative way to handle reactivity. No more zone.js gymnastics.</p>" +
+                "<pre><code>const count = signal(0);\nconst doubled = computed(() =&gt; count() * 2);\n\ncount.set(5);\nconsole.log(doubled()); // 10</code></pre>" +
+                "<h2>Why this matters</h2><p>Fine-grained reactivity means fewer re-renders, simpler code, and better performance — especially in component-heavy apps.</p>" +
+                "<blockquote>Signals are not a replacement for RxJS. They are a complement for UI state.</blockquote>",
+                "https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg",
                 "qg2J2MZHk4U",
-                Set.of("standalone", "signals", "lazy-loading"),
-                false);
-
-        savePost(admin, bySlug.get("full-stack"),
-                "Build a blog from scratch: Spring Boot + Angular",
-                "Step-by-step build of a JWT-secured blog with categories, comments, likes and an admin dashboard.",
-                "<h2>What we'll build</h2><p>By the end of this tutorial you'll have a deployable blog with:</p>" +
-                "<ul><li>JWT authentication</li><li>Role-based admin dashboard</li><li>Categories, tags, comments, likes</li><li>Newsletter signup</li><li>YouTube channel integration</li></ul>" +
-                "<h2>Backend skeleton</h2><p>We'll use Spring Boot 3 with Spring Data JPA. MySQL for persistence in prod, H2 for local dev.</p>" +
-                "<h2>Frontend skeleton</h2><p>Angular 17 with standalone components and Tailwind CSS. Lazy-loaded routes, route guards, and an HTTP interceptor for the JWT token.</p>" +
-                "<blockquote>By building end-to-end you'll <strong>actually</strong> understand how the pieces talk to each other.</blockquote>",
-                "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=70",
-                null,
-                Set.of("project", "tutorial", "end-to-end"),
+                Set.of("signals", "reactivity", "angular-17"),
                 true);
 
         savePost(admin, bySlug.get("cloud"),
-                "Dockerize your Spring Boot + Angular app",
-                "A single docker-compose.yml that runs MySQL, Spring Boot and Angular for local development.",
-                "<h2>Why Docker?</h2><p>One command to spin up the whole stack — no \"works on my machine\".</p>" +
-                "<h2>Multi-stage Dockerfile</h2><p>Build the JAR in a Maven container, then copy it into a slim JRE image for runtime.</p>" +
-                "<pre><code>FROM maven:3.9-eclipse-temurin-17 AS build\nWORKDIR /app\nCOPY pom.xml .\nRUN mvn dependency:go-offline\nCOPY src ./src\nRUN mvn -B clean package -DskipTests\n\nFROM eclipse-temurin:17-jre\nCOPY --from=build /app/target/*.jar app.jar\nENTRYPOINT [\"java\",\"-jar\",\"/app.jar\"]</code></pre>" +
-                "<h2>Compose everything</h2><p>One file describes MySQL + backend + frontend networking. <code>docker compose up</code> and you're done.</p>",
-                "https://images.unsplash.com/photo-1605379399642-870262d3d051?w=1200&q=70",
+                "Deploying Microservices on Kubernetes",
+                "From Docker image to a multi-node K8s cluster — the full production pipeline.",
+                "<h2>The journey</h2><p>This guide walks you from a single Spring Boot Dockerfile to a horizontally-scalable Kubernetes deployment.</p>" +
+                "<h2>Key concepts</h2><ul><li>Deployments &amp; ReplicaSets</li><li>Services &amp; Ingress</li><li>ConfigMaps &amp; Secrets</li><li>Liveness &amp; readiness probes</li></ul>" +
+                "<pre><code>apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: api\nspec:\n  replicas: 3\n  template:\n    spec:\n      containers:\n      - name: api\n        image: spillnode/api:1.0.0</code></pre>",
+                "https://images.pexels.com/photos/17489150/pexels-photo-17489150.jpeg",
                 null,
-                Set.of("docker", "devops", "compose"),
+                Set.of("kubernetes", "docker", "devops"),
+                true);
+
+        savePost(admin, bySlug.get("spring-boot"),
+                "Building Production REST APIs with Spring Boot 3",
+                "Set up a secure, observable REST API with validation, exception handling, and OpenAPI docs.",
+                "<h2>The skeleton</h2><p>A production REST API is more than @RestController. You need validation, consistent errors, observability, and security baked in.</p>" +
+                "<h2>The stack we'll wire</h2><ul><li>Spring Web + Validation</li><li>Spring Security (JWT)</li><li>Spring Data JPA</li><li>SpringDoc OpenAPI 3</li><li>Micrometer + Actuator</li></ul>" +
+                "<pre><code>&#64;RestController\n&#64;RequestMapping(\"/api/posts\")\n&#64;Validated\npublic class PostController {\n  &#64;PostMapping\n  public ResponseEntity&lt;Post&gt; create(&#64;Valid &#64;RequestBody PostRequest req) {\n    return ResponseEntity.ok(service.create(req));\n  }\n}</code></pre>" +
+                "<blockquote>Boilerplate today saves 3am debugging tomorrow.</blockquote>",
+                "https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg",
+                "KYNR5js2cXE",
+                Set.of("spring-boot", "rest-api", "production"),
+                true);
+
+        savePost(admin, bySlug.get("java"),
+                "Mastering Java Collections Framework",
+                "A deep dive into ArrayList, HashMap, ConcurrentHashMap and when to use each.",
+                "<h2>Why collections matter</h2><p>The right collection turns an O(n) hot path into O(1). Pick wrong and you'll burn CPU.</p>" +
+                "<h2>The cheat sheet</h2><ul><li><code>ArrayList</code> — fast random access, slow inserts in the middle</li><li><code>LinkedList</code> — fast inserts, slow random access</li><li><code>HashMap</code> — O(1) lookups, no order guarantee</li><li><code>LinkedHashMap</code> — O(1) lookups, insertion order preserved</li><li><code>TreeMap</code> — sorted, O(log n) ops</li><li><code>ConcurrentHashMap</code> — thread-safe, lock-striped</li></ul>" +
+                "<pre><code>Map&lt;String, Integer&gt; counts = new ConcurrentHashMap&lt;&gt;();\ncounts.merge(\"hits\", 1, Integer::sum);</code></pre>",
+                "https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg",
+                "grCTXGW3exQ",
+                Set.of("collections", "java-core", "performance"),
+                false);
+
+        savePost(admin, bySlug.get("nextjs"),
+                "Next.js App Router: Server Components Done Right",
+                "Understand the server/client boundary and build fast, SEO-friendly apps with the App Router.",
+                "<h2>Server vs client</h2><p>By default in the App Router, components run on the server. They have zero JS shipped to the client. You only opt-in to client interactivity when needed.</p>" +
+                "<pre><code>// app/posts/page.tsx — server component\nexport default async function Posts() {\n  const posts = await db.posts.findMany();\n  return &lt;ul&gt;{posts.map(p =&gt; &lt;li&gt;{p.title}&lt;/li&gt;)}&lt;/ul&gt;;\n}</code></pre>" +
+                "<h2>When to bail to client</h2><p>Use 'use client' only when you need state, effects, or browser APIs. Push it as deep into the tree as possible.</p>",
+                "https://images.pexels.com/photos/30820142/pexels-photo-30820142.jpeg",
+                null,
+                Set.of("nextjs", "rsc", "app-router"),
+                false);
+
+        savePost(admin, bySlug.get("system-design"),
+                "System Design: Designing a URL Shortener",
+                "Tackle the classic interview question — from napkin sketch to a scalable, production-ready design.",
+                "<h2>The brief</h2><p>Take a long URL, return a short one. Sounds easy. Scale to 1B URLs and 100k QPS — suddenly it isn't.</p>" +
+                "<h2>The pieces</h2><ul><li><strong>ID generation</strong> — base62, snowflake, or counter shards</li><li><strong>Storage</strong> — KV store (Redis) for hot reads, RDBMS for source-of-truth</li><li><strong>Cache</strong> — CDN + Redis hot layer</li><li><strong>Analytics</strong> — async event stream</li></ul>" +
+                "<blockquote>Every system design interview is really an exercise in saying \"it depends\" — with substance.</blockquote>",
+                "https://images.pexels.com/photos/30820142/pexels-photo-30820142.jpeg",
+                null,
+                Set.of("system-design", "interview", "scalability"),
                 false);
     }
 
